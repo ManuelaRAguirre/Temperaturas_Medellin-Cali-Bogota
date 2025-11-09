@@ -5,14 +5,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.List;
 import javax.swing.*;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
-
 import datechooser.beans.DateChooserCombo;
 import operaciones.AcTemperaturas;
 import operaciones.RegistrodeTemperaturas;
@@ -104,14 +103,21 @@ public class FrmInterfaz extends JFrame {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (var entry : promedios.entrySet()) {
-            dataset.addValue(entry.getValue(), "Temperatura", entry.getKey());
+            dataset.addValue(entry.getValue(), "Promedio", entry.getKey());
         }
 
         JFreeChart chart = ChartFactory.createBarChart(
                 "Promedio de temperaturas por ciudad",
                 "Ciudad",
                 "Temperatura (°C)",
-                dataset);
+                dataset,
+                org.jfree.chart.plot.PlotOrientation.VERTICAL,
+                true,
+                true,
+                false);
+
+        chart.getCategoryPlot().getDomainAxis().setCategoryLabelPositions(
+                org.jfree.chart.axis.CategoryLabelPositions.UP_45);
 
         ChartPanel panel = new ChartPanel(chart);
         panel.setPreferredSize(new Dimension(600, 400));
@@ -131,6 +137,15 @@ public class FrmInterfaz extends JFrame {
         String ciudad = (String) cmbCiudad.getSelectedItem();
         LocalDate desde = dccDesde.getSelectedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate hasta = dccHasta.getSelectedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Calendar limiteMax = Calendar.getInstance();
+        limiteMax.set(2025, Calendar.NOVEMBER, 5);
+
+        dccDesde.setMaxDate(limiteMax);
+        dccHasta.setMaxDate(limiteMax);
+        Calendar limiteMin = Calendar.getInstance();
+        limiteMin.set(2010, Calendar.JANUARY, 1);
+        dccDesde.setMinDate(limiteMin);
+        dccHasta.setMinDate(limiteMin);
 
         pnlEstadisticas.removeAll();
         pnlEstadisticas.setLayout(new GridBagLayout());

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class AcTemperaturas {
 
     public static List<RegistrodeTemperaturas> getDatos(String nombreArchivo) {
-        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("d/MM/yyyy H:mm");
+        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("d/M/yyyy H:mm");
         try (Stream<String> lineas = Files.lines(Paths.get(nombreArchivo))) {
             return lineas.skip(1)
                     .map(linea -> linea.split(";"))
