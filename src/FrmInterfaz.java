@@ -83,7 +83,7 @@ public class FrmInterfaz extends JFrame {
     }
 
     private void cargarDatos() {
-        String nombreArchivo = System.getProperty("user.dir") + "/data/Temperaturas.csv";
+        String nombreArchivo = System.getProperty("user.dir") + "/src/data/Temperaturas.csv";
         registros = AcTemperaturas.getDatos(nombreArchivo);
         ciudades = AcTemperaturas.getCiudades(registros);
 
