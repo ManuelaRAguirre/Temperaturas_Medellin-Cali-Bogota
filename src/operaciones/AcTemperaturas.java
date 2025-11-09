@@ -20,7 +20,7 @@ public class AcTemperaturas {
                     .filter(partes -> partes.length >= 5)
                     .map(textos -> new RegistrodeTemperaturas(
                             textos[4].trim(), // ciudad
-                            textos[0].trim(), // nombre de la estacion de la que se obtuvo el registro 
+                            textos[0].trim(), // nombre de la estacion de la que se obtuvo el registro
                             Double.parseDouble(textos[3].trim()), // valor (temperatura)
                             LocalDate.parse(textos[2].trim(), formatoFecha))) // fecha
                     .collect(Collectors.toList());
@@ -35,6 +35,14 @@ public class AcTemperaturas {
                 .filter(r -> r.getCiudad().equalsIgnoreCase(ciudad)
                         && !r.getFecha().isBefore(desde)
                         && !r.getFecha().isAfter(hasta))
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> getCiudades(List<RegistrodeTemperaturas> registros) {
+        return registros.stream()
+                .map(RegistrodeTemperaturas::getCiudad)
+                .distinct()
+                .sorted()
                 .collect(Collectors.toList());
     }
 
@@ -62,14 +70,14 @@ public class AcTemperaturas {
                         .orElse(0);
     }
 
-
     public static List<RegistrodeTemperaturas> filtrarPorRango(LocalDate desde, LocalDate hasta,
             List<RegistrodeTemperaturas> registros) {
         return registros.stream()
                 .filter(r -> !r.getFecha().isBefore(desde) && !r.getFecha().isAfter(hasta))
-                .collect(Collectors.toList());}
+                .collect(Collectors.toList());
+    }
 
-                public static String getCiudadMasCalurosa(LocalDate fecha, List<RegistrodeTemperaturas> registros) {
+    public static String getCiudadMasCalurosa(LocalDate fecha, List<RegistrodeTemperaturas> registros) {
         return registros.stream()
                 .filter(r -> r.getFecha().isEqual(fecha))
                 .collect(Collectors.groupingBy(RegistrodeTemperaturas::getCiudad,
@@ -78,10 +86,10 @@ public class AcTemperaturas {
                 .stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
-                .orElse("Sin datos");}
+                .orElse("Sin datos");
+    }
 
-
-                  public static String getCiudadMasFria(LocalDate fecha, List<RegistrodeTemperaturas> registros) {
+    public static String getCiudadMasFria(LocalDate fecha, List<RegistrodeTemperaturas> registros) {
         return registros.stream()
                 .filter(r -> r.getFecha().isEqual(fecha))
                 .collect(Collectors.groupingBy(RegistrodeTemperaturas::getCiudad,
@@ -90,16 +98,14 @@ public class AcTemperaturas {
                 .stream()
                 .min(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
-                .orElse("Sin datos");}
-    
-     public static Map<String, Double> getPromedioPorCiudad(LocalDate desde, LocalDate hasta,
+                .orElse("Sin datos");
+    }
+
+    public static Map<String, Double> getPromedioPorCiudad(LocalDate desde, LocalDate hasta,
             List<RegistrodeTemperaturas> registros) {
         return filtrarPorRango(desde, hasta, registros).stream()
                 .collect(Collectors.groupingBy(RegistrodeTemperaturas::getCiudad,
                         Collectors.averagingDouble(RegistrodeTemperaturas::getValor)));
     }
-
-    
-
 
 }
